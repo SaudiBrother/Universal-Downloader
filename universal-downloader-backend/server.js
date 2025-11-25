@@ -1,94 +1,74 @@
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
-const ytdlp = require("yt-dlp-exec");
+const ytdl = require("@distube/ytdl-core");
+const { exec } = require("child_process");
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
 
-/**
- * MAIN API — FETCH VIDEO INFO
- */
+// Root route for testing
+app.get("/", (req, res) => {
+    res.send("Universal Downloader Backend is running!");
+});
+
+// Main API route
 app.post("/api/fetch", async (req, res) => {
-    const url = req.body.url;
-    if (!url) return res.json({ error: "Missing URL" });
+    const { url } = req.body;
+
+    if (!url) {
+        return res.status(400).json({ error: "No URL provided" });
+    }
 
     try {
-        console.log("Fetching:", url);
+        // Simple platform detection
+        if (ytdl.validateURL(url)) {
+            const info = await ytdl.getInfo(url);
 
-        // Query yt-dlp JSON info
-        const info = await ytdlp(url, {
-            dumpSingleJson: true,
-            noCheckCertificates: true,
-            noWarnings: true,
-            preferFreeFormats: true
-        });
+            return res.json({
+                platform: "youtube",
+                title: info.videoDetails.title,
+                thumbnail: info.videoDetails.thumbnails.pop().url,
+                formats: info.formats
+                    .filter(f => f.hasAudio)
+                    .map(f => ({
+                        quality: f.qualityLabel,
+                        mime: f.mimeType,
+                        url: f.url
+                    }))
+            });
+        }
 
-        const formats = (info.formats || [])
-            .filter(f => f.url && f.url.startsWith("http"))
-            .map(f => ({
-                id: f.format_id,
-                ext: f.ext,
-                note: f.format_note || f.format,
-                width: f.width,
-                height: f.height,
-                size: f.filesize || f.filesize_approx || null,
-                url: f.url
-            }));
+        // Other platforms (TikTok, IG, FB, X)
+        exec(`yt-dlp -J "${url}"`, (err, stdout) => {
+            if (err) {
+                return res.json({ error: "yt-dlp failed to fetch" });
+            }
 
-        res.json({
-            title: info.title,
-            thumbnail: info.thumbnail,
-            duration: info.duration,
-            formats,
-            raw: info
+            try {
+                const data = JSON.parse(stdout);
+                res.json({
+                    title: data.title,
+                    thumbnail: data.thumbnail,
+                    formats: data.formats.map(f => ({
+                        quality: f.format_note,
+                        ext: f.ext,
+                        url: f.url
+                    }))
+                });
+            } catch (parseError) {
+                res.json({ error: "Parsing failed" });
+            }
         });
 
     } catch (err) {
-        console.error("yt-dlp error:", err);
-        res.json({ error: err.toString() });
+        res.status(500).json({ error: "Unknown server error" });
     }
 });
 
-/**
- * PROXY — DOWNLOAD FILES SAFELY
- */
-app.get("/api/proxy", async (req, res) => {
-    const target = req.query.url;
-    if (!target) return res.json({ error: "Missing url" });
-
-    try {
-        const https = target.startsWith("https")
-            ? require("https")
-            : require("http");
-
-        https.get(target, proxyRes => {
-            res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.pipe(res);
-        }).on("error", err => {
-            res.status(500).json({ error: err.toString() });
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: err.toString() });
-    }
-});
-
-/**
- * HEALTH CHECK
- */
-app.get("/", (_, res) => {
-    res.send("Universal Downloader Backend is running.");
-});
-
-/**
- * PORT AUTO-DETECT (RAILWAY REQUIRED)
- */
+// Railway port handler
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log("Backend running on port:", PORT);
+    console.log("Backend berjalan di port " + PORT);
 });
