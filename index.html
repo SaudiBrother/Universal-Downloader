@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id" class="theme-youtube">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Downloader - Ultimate Tool</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+
+    <div id="overlay-layer" class="overlay-layer">
+        <div class="overlay-content">
+            <div class="loader-ring"></div>
+            <h2 id="overlay-text">Connecting to Server...</h2>
+        </div>
+    </div>
+
+    <div class="app-layout">
+        <aside class="sidebar glass-panel">
+            <div class="brand">
+                <div class="brand-icon-wrapper">
+                    <i id="brand-icon" class="fa-brands fa-youtube"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>S-DOWNLOADER</h1>
+                    <small>Multi-Platform Ripper</small>
+                </div>
+            </div>
+
+            <div class="sidebar-scroll">
+                <div class="control-group">
+                    <label class="label-text"><i class="fa-solid fa-layer-group"></i> Select Platform</label>
+                    <div class="select-wrapper">
+                        <select id="platform-selector" class="select-input">
+                            <option value="theme-youtube" selected>YouTube</option>
+                            <option value="theme-tiktok">TikTok</option>
+                            <option value="theme-instagram">Instagram</option>
+                            <option value="theme-facebook">Facebook</option>
+                            <option value="theme-x">X (Twitter)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="master-section glass-inset">
+                    <div class="master-header">
+                        <span>STATUS SERVER</span>
+                        <span id="ping-readout" class="mono-text">24ms</span>
+                    </div>
+                    <div class="meter-container">
+                        <div class="meter-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="workspace">
+            
+            <section class="input-area fade-in-up">
+                <div class="card playback-card glass-panel">
+                    <div class="playback-header">
+                        <div class="playback-info">
+                            <h2 id="status-text">Paste Link Below</h2>
+                            <small class="mono-text" style="opacity: 0.7;">Support MP4 & MP3 High Quality</small>
+                        </div>
+                    </div>
+                    
+                    <div class="waveform-wrapper glass-inset input-container">
+                        <i class="fa-solid fa-link input-icon"></i>
+                        <input type="text" id="url-input" placeholder="https://..." autocomplete="off">
+                    </div>
+
+                    <div class="transport-controls">
+                        <button id="fetch-btn" class="btn-play hover-scale">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="rack-area fade-in-up delay-1">
+                <div class="rack-header">
+                    <h3>Download Options</h3>
+                    <button id="clear-btn" class="btn-link"><i class="fa-solid fa-trash"></i> Clear</button>
+                </div>
+                
+                <div id="result-container" class="fx-grid">
+                    </div>
+                
+                <div id="empty-msg" class="glass-panel">
+                    <i class="fa-solid fa-cloud-arrow-down fa-bounce"></i> Waiting for link...
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <template id="download-card-template">
+        <div class="card fx-card glass-panel">
+            <div class="fx-header">
+                <div class="fx-icon-box"><i class="fa-solid fa-video"></i></div>
+                <span class="fx-name">Video Result</span>
+                <div class="fx-tools">
+                    <span class="badge mono-text">HD</span>
+                </div>
+            </div>
+            <div class="fx-body download-body">
+                <div class="thumb-wrapper">
+                    <img src="" alt="Thumbnail" class="video-thumb">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary download-action-video">
+                        <i class="fa-solid fa-file-video"></i> Download MP4
+                    </button>
+                    <button class="btn btn-outline download-action-audio">
+                        <i class="fa-solid fa-music"></i> Audio Only
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</body>                                       </html>
