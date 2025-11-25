@@ -3,51 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>Universal Downloader - Ultimate Tool</title>
-    
+
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+
+    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-    
+
+    <!-- JS -->
     <script src="js/script.js" defer></script>
 </head>
 <body>
 
+    <!-- MOBILE SIDEBAR BACKDROP -->
     <div id="mobile-backdrop" class="overlay-backdrop"></div>
 
+    <!-- GLOBAL LOADING OVERLAY -->
     <div id="loading-overlay" class="overlay">
         <div class="spinner"></div>
-        <h3 style="margin-top: 20px;" id="loading-text">Analyzing URL...</h3>
-        <small class="mono-text" style="opacity: 0.6; margin-top: 5px;">Connecting to API</small>
+        <h3 id="loading-text" style="margin-top: 20px;">Analyzing URL...</h3>
+        <small class="mono-text" style="opacity: .6;">Connecting to Server</small>
     </div>
 
+    <!-- TOAST NOTIFICATION CONTAINER -->
     <div id="toast-container" class="toast-container"></div>
 
     <div class="app-layout">
         
+        <!-- MOBILE HEADER -->
         <header class="mobile-header">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent);"></i>
                 <span style="font-weight: 700;">S-DOWNLOADER</span>
             </div>
-            <button class="hamburger" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <button id="menu-btn" class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </header>
 
-        <aside class="sidebar" id="sidebar">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+            
+            <!-- BRAND -->
             <div class="brand">
                 <div class="brand-icon">
                     <i id="brand-icon" class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
                     <h2 style="font-size: 1.2rem;">S-DL</h2>
-                    <small style="opacity: 0.6; font-size: 0.75rem;">Universal Ripper</small>
+                    <small style="opacity: .6; font-size: .75rem;">Universal Ripper</small>
                 </div>
             </div>
 
+            <!-- SIDEBAR CONTENT -->
             <div class="sidebar-content">
+
+                <!-- PLATFORM SELECT -->
                 <div class="control-group">
                     <label>Platform Mode</label>
                     <div class="custom-select">
@@ -63,11 +81,12 @@
                     </div>
                 </div>
 
+                <!-- SERVER STATUS -->
                 <div class="control-group">
                     <label>Server Status</label>
                     <div class="status-card glass-inset">
                         <div class="status-header">
-                            <span>API Connection</span>
+                            <span>Backend</span>
                             <span class="mono-text" style="color: #4ade80;">Active</span>
                         </div>
                         <div class="meter-bg">
@@ -76,71 +95,89 @@
                     </div>
                 </div>
 
+                <!-- HISTORY LIST -->
                 <div class="control-group" style="margin-top: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <label style="margin: 0;">Recent Downloads</label>
-                        <i class="fa-solid fa-trash-can" id="clear-history" style="cursor: pointer; opacity: 0.5; font-size: 0.8rem;"></i>
+                        <i id="clear-history" class="fa-solid fa-trash-can" style="cursor: pointer; opacity: .5; font-size: .8rem;"></i>
                     </div>
+
                     <div id="history-container" class="history-list glass-inset">
-                        <div style="padding: 10px; text-align: center; opacity: 0.5; font-size: 0.8rem;">No recent history</div>
+                        <div style="padding: 10px; opacity: .5; text-align: center; font-size: .8rem;">No recent history</div>
                     </div>
                 </div>
+
             </div>
         </aside>
 
+        <!-- MAIN WORKSPACE -->
         <main class="workspace">
+
+            <!-- INPUT SECTION -->
             <section class="input-section">
                 <div class="hero-card glass-panel">
-                    <h1 style="font-weight: 800; margin-bottom: 10px; letter-spacing: -1px;">Paste Link, <span style="color: var(--accent);">Get File.</span></h1>
-                    <p style="opacity: 0.7; max-width: 400px; margin: 0 auto;">Supports YouTube, TikTok, Instagram, Facebook & X with high-quality Audio/Video extraction.</p>
+                    <h1 style="font-weight: 800; margin-bottom: 10px; letter-spacing: -1px;">
+                        Paste Link, <span style="color: var(--accent);">Get File.</span>
+                    </h1>
+                    <p style="opacity: .7; max-width: 400px; margin: 0 auto;">
+                        Supports YouTube, TikTok, Instagram, Facebook & X with high-quality Audio/Video extraction.
+                    </p>
 
                     <div class="url-wrapper">
-                        <button class="paste-btn" id="paste-btn" title="Paste from Clipboard">
+                        <button id="paste-btn" class="paste-btn" title="Paste from Clipboard">
                             <i class="fa-regular fa-clipboard"></i>
                         </button>
-                        <input type="text" id="url-input" placeholder="Paste video URL here (https://...)" autocomplete="off">
-                        <button class="search-btn" id="fetch-btn">
+
+                        <input id="url-input" type="text" placeholder="Paste video URL here (https://...)" autocomplete="off">
+
+                        <button id="fetch-btn" class="search-btn">
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
             </section>
 
+            <!-- RESULTS SECTION -->
             <section class="results-section">
                 <div class="results-header">
                     <h3 id="result-title">Ready to Download</h3>
                     <button id="clear-results" class="mono-text" style="background:none; border:none; color:var(--muted); cursor:pointer;">Clear All</button>
                 </div>
-                
+
                 <div id="results-grid" class="results-grid">
-                    <div class="glass-panel" style="grid-column: 1/-1; padding: 40px; text-align: center; border-style: dashed; opacity: 0.5;">
-                        <i class="fa-solid fa-layer-group" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                    <div class="glass-panel" style="grid-column:1/-1; padding:40px; text-align:center; border-style:dashed; opacity:.5;">
+                        <i class="fa-solid fa-layer-group" style="font-size:2rem; margin-bottom:15px;"></i>
                         <p>Waiting for link...</p>
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
 
+    <!-- CARD TEMPLATE -->
     <template id="card-template">
         <div class="card glass-panel">
             <div class="card-thumb">
                 <img src="" alt="Thumb">
                 <span class="duration-badge mono-text">00:00</span>
             </div>
+
             <div class="card-body">
-                <h4 class="card-title">Video Title Goes Here</h4>
-                
+                <h4 class="card-title">Video Title</h4>
+
+                <!-- FORMAT -->
                 <div style="margin-top: 5px;">
-                    <small style="text-transform: uppercase; font-weight: 700; color: var(--muted); font-size: 0.7rem;">Format</small>
+                    <small style="text-transform: uppercase; font-weight: 700; color: var(--muted); font-size: .7rem;">Format</small>
                     <div class="quality-options" id="format-options">
                         <div class="q-chip active" data-type="mp4">MP4</div>
                         <div class="q-chip" data-type="mp3">MP3</div>
                     </div>
                 </div>
 
+                <!-- QUALITY -->
                 <div style="margin-top: 5px;">
-                    <small style="text-transform: uppercase; font-weight: 700; color: var(--muted); font-size: 0.7rem;">Quality</small>
+                    <small style="text-transform: uppercase; font-weight: 700; color: var(--muted); font-size: .7rem;">Quality</small>
                     <div class="quality-options" id="quality-options">
                         <div class="q-chip active">1080p</div>
                         <div class="q-chip">720p</div>
@@ -156,4 +193,4 @@
     </template>
 
 </body>
-</html>
+    </html>
